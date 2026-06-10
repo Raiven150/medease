@@ -1,12 +1,12 @@
-const modal = document.getElementById("modal");
-const modalPanel = document.getElementById("modal-panel");
-const modalTitle = document.getElementById("modal-title");
-const modalContent = document.getElementById("modal-content");
-const modalActions = document.getElementById("modal-actions");
-
 let focusTrapHandler = null;
 let escapeHandler = null;
 let lastFocusedElement = null;
+
+const getModal = () => document.getElementById("modal");
+const getModalPanel = () => document.getElementById("modal-panel");
+const getModalTitle = () => document.getElementById("modal-title");
+const getModalContent = () => document.getElementById("modal-content");
+const getModalActions = () => document.getElementById("modal-actions");
 
 // ---------------------------------------------------------------------------
 // Shared HTML escape utility — imported by every module that builds
@@ -70,19 +70,18 @@ function trapFocus(element) {
 function openModal(title, content, actions) {
   lastFocusedElement = document.activeElement;
 
-  modalTitle.textContent = title;
-  modalContent.innerHTML = "";
-  modalContent.appendChild(content);
-  modalActions.innerHTML = "";
-  actions.forEach((action) => modalActions.appendChild(action));
+  getModalTitle().textContent = title;
+  getModalContent().innerHTML = "";
+  getModalContent().appendChild(content);
+  getModalActions().innerHTML = "";
+  actions.forEach((action) => getModalActions().appendChild(action));
 
-  modal.style.display = "flex";
-  modal.setAttribute("aria-hidden", "false");
-  modalPanel.setAttribute("role", "dialog");
-  modalPanel.setAttribute("aria-modal", "true");
-  trapFocus(modalPanel);
+  getModal().style.display = "flex";
+  getModal().setAttribute("aria-hidden", "false");
+  getModalPanel().setAttribute("role", "dialog");
+  getModalPanel().setAttribute("aria-modal", "true");
+  trapFocus(getModalPanel());
 
-  // Escape key closes the modal
   if (escapeHandler) document.removeEventListener("keydown", escapeHandler);
   escapeHandler = (e) => {
     if (e.key === "Escape") closeModal();
@@ -91,13 +90,13 @@ function openModal(title, content, actions) {
 }
 
 function closeModal() {
-  modal.style.display = "none";
-  modal.setAttribute("aria-hidden", "true");
-  modalPanel.removeAttribute("role");
-  modalPanel.removeAttribute("aria-modal");
+  getModal().style.display = "none";
+  getModal().setAttribute("aria-hidden", "true");
+  getModalPanel().removeAttribute("role");
+  getModalPanel().removeAttribute("aria-modal");
 
   if (focusTrapHandler) {
-    modalPanel.removeEventListener("keydown", focusTrapHandler);
+    getModalPanel().removeEventListener("keydown", focusTrapHandler);
     focusTrapHandler = null;
   }
   if (escapeHandler) {
@@ -105,14 +104,15 @@ function closeModal() {
     escapeHandler = null;
   }
 
-  // Restore focus to the element that triggered the modal
   if (lastFocusedElement?.focus) lastFocusedElement.focus();
   lastFocusedElement = null;
 }
 
 // Backdrop click — only close when the dark overlay itself is clicked
-modal.addEventListener("click", (e) => {
-  if (e.target === modal) closeModal();
+document.addEventListener("DOMContentLoaded", () => {
+  getModal().addEventListener("click", (e) => {
+    if (e.target === getModal()) closeModal();
+  });
 });
 
 // ---------------------------------------------------------------------------

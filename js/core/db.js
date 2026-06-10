@@ -1,9 +1,7 @@
 export const STORES = {
   ADMINS: "admins",
   DUES: "dues",
-  MEDICINES: "medicines",
   SALES: "sales",
-  SALE_ITEMS: "sale_items",
   SUPPLIERS: "suppliers",
   INVENTORY: "inventory",
   PROFITS: "profits",
@@ -25,9 +23,7 @@ export function openDB() {
       const standardStores = [
         STORES.ADMINS,
         STORES.DUES,
-        STORES.MEDICINES,
         STORES.SALES,
-        STORES.SALE_ITEMS,
         STORES.SUPPLIERS,
         STORES.INVENTORY,
       ];
